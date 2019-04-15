@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+	<p id = "user">Hi </p>
+	<br>
+	<p id="demo"></p>
+
+
+	<form>
+		<input id="textmessage" type="text"> <input
+			onclick="sendMessage();" value="Send Message" type="button">
+	</form>
+	
+	<br>
+	<textarea id="messageTextArea" rows="10" cols="50"></textarea>
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script type="text/javascript">
+	
+		var username = 'vignesh';
+		
+		connect();
+		var receiver = prompt('who is your receiver','receiver name');
+
+
+		function connect() {
+			username = prompt("please enter your name", "v");
+			if (username != null || username != 'v') {
+				
+
+				console.log("in connect method")
+			}
+
+		}
+
+		var ws = new SockJS('/ws');
+		stompClient = Stomp.over(ws);
+		stompClient.connect({}, onConnected, onError);
+
+		var messageTextArea = document.getElementById("messageTextArea");
+		function onConnected() {
+			document.getElementById("user").innerHTML =
+				" "+username;
+			document.getElementById("demo").innerHTML =
+				"Successfully Connected !! ";
+			// Subscribe to the Public Topic
+			stompClient.subscribe('/topic/public', onMessageReceived);
+			stompClient.subscribe('/topic/reply', onMessageReceived);
+			stompClient.subscribe('user/queue/reply', onMessageReceived);
+			stompClient.subscribe('user/queue/messages',onMessageReceived);
+
+
+			alert(messageTextArea.value);
+			// Tell your username to the server
+			stompClient.send("/app/chat.addUser", {}, JSON.stringify({
+				sender : username,
+				type : 'JOIN',
+				receiver : 'public'
+			}))
+
+		}
+
+		function onError(error) {
+			alert('Could not connect to WebSocket server. Please refresh this page to try again!');
+		}
+
+		function onMessageReceived(payload) {
+			
+			var message = JSON.parse(payload.body);
+		    if(message.type === 'JOIN') {
+
+				messageTextArea.value +=" "+message.sender+" Joined in here ";
+		    }else if(message.type == 'CHAT'){			
+				messageTextArea.value += " " + message.sender + "==>"+ message.content + "/n";
+		    }else if(message.type == 'LEAVE'){
+				messageTextArea.value +=" "+ message.sender+" left in here "	;
+		    }
+
+
+		}
+
+		function sendMessage() {
+
+			var message = document.forms[0].elements[0].value;
+			document.forms[0].elements[0].value = "";
+			
+
+			if (message && stompClient) {
+				var chatMessage = {
+					sender : username,
+					content : message,
+					type : 'CHAT',
+					receiver: receiver
+				};
+
+				stompClient.send("/app/chat.sendMessage", {}, JSON
+						.stringify(chatMessage));
+			}
+
+		}
+	</script>
+
+</body>
+</html>
