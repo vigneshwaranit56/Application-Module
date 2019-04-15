@@ -14,6 +14,7 @@ public class ChatApplication {
 	
 	/*
 	@Autowired
+	
 	private Environment env;
 	
 	// set up a logger for diagnostics
