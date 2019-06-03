@@ -37,7 +37,7 @@ public class MessageController {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<Void> createMessage(@RequestBody Messages message){
+	public ResponseEntity<Void> createMessage( Messages message){
 		 messageService.save(message);
 		
 		return new ResponseEntity<Void>(HttpStatus.CREATED);

@@ -48,7 +48,7 @@ public class UserController {
 	}
 
 	@PutMapping
-	public ResponseEntity<UsersEntity> updateUser(@RequestBody UsersEntity user) {
+	public ResponseEntity<UsersEntity> updateUser( UsersEntity user) {
 		if (userService.existsById(user.getId())) {
 			user = userService.save(user);
 		} else {
@@ -62,7 +62,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UsersEntity> createuser(@RequestBody UsersEntity user) {
+	public ResponseEntity<UsersEntity> createuser( UsersEntity user) {
 
 		if (!userService.existsById(user.getId()) && user.getEmail() != null) {
 

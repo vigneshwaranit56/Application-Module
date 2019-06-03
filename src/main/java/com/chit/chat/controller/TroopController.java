@@ -25,7 +25,7 @@ public class TroopController {
 	TroopService troopService;
 	
 	@PostMapping()
-	public ResponseEntity<Troop> createGroup(@RequestBody Troop troop){
+	public ResponseEntity<Troop> createGroup(Troop troop){
 		Troop troopE =troopService.save(troop);
 		
 		return new ResponseEntity<Troop>(troopE,HttpStatus.CREATED);
@@ -45,7 +45,7 @@ public class TroopController {
 	
 	
 	@PutMapping()
-	public ResponseEntity<Void> updateTroop(@RequestBody Troop troop){
+	public ResponseEntity<Void> updateTroop( Troop troop){
 		
 		
 		troopService.save(troop);
