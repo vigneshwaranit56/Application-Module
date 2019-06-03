@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.chit.chat.entity.UsersEntity;
+import com.chit.chat.exception.handler.NotFoundException;
 import com.chit.chat.service.UserService;
 
 @RestController
@@ -22,14 +23,18 @@ import com.chit.chat.service.UserService;
 public class UserController {
 
 	@Autowired
-//	(required=true)
-//	@Qualifier("userServiceImplementation")
+	// (required=true)
+	// @Qualifier("userServiceImplementation")
+
 	UserService userService;
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<UsersEntity> getuser(@PathVariable int userId) {
 
 		UsersEntity user = userService.get(userId);
+
+		if (user == null)
+			throw new NotFoundException("user is not found, check your user id");
 
 		return new ResponseEntity<UsersEntity>(user, HttpStatus.OK);
 	}
@@ -46,30 +51,34 @@ public class UserController {
 	public ResponseEntity<UsersEntity> updateUser(@RequestBody UsersEntity user) {
 		if (userService.existsById(user.getId())) {
 			user = userService.save(user);
+		} else {
+
+			throw new NotFoundException("user is not found, check your user id");
+
 		}
+
 		return new ResponseEntity<UsersEntity>(user, HttpStatus.ACCEPTED);
 
 	}
 
 	@PostMapping
-	public ResponseEntity<UsersEntity> createuser(@RequestBody UsersEntity user){
-		
-		if(!userService.existsById(user.getId())){
+	public ResponseEntity<UsersEntity> createuser(@RequestBody UsersEntity user) {
 
-		 user = userService.save(user);
-		}
+		if (!userService.existsById(user.getId()) && user.getEmail() != null) {
 
-		
-		return new ResponseEntity<UsersEntity>(user,HttpStatus.CREATED);
+			user = userService.save(user);
+		} else
+			throw new NotFoundException("user is not found, check your user id");
+
+		return new ResponseEntity<UsersEntity>(user, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/image/{userId}")
-	public ResponseEntity<Void> uploadFile(@PathVariable int userId,@RequestParam("file") MultipartFile file) {
-		
-		userService.uploadImage(userId,file);
+	public ResponseEntity<Void> uploadFile(@PathVariable int userId, @RequestParam("file") MultipartFile file) {
 
-	
+		userService.uploadImage(userId, file);
+
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
-		       
+
 }

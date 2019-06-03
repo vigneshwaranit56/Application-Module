@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @EnableDiscoveryClient
 @PropertySource("classpath:persistence-mysql.properties")
-public class ChatApplication {
+public class Application {
 	
 	/*
 	@Autowired
@@ -83,7 +83,7 @@ public class ChatApplication {
 */
 	
 	public static void main(String[] args) {
-		SpringApplication.run(ChatApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 	
 	 

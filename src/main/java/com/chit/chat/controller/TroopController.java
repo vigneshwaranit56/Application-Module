@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chit.chat.entity.TroopEntity;
+import com.chit.chat.exception.handler.NotFoundException;
 import com.chit.chat.model.Troop;
 import com.chit.chat.service.TroopService;
 
@@ -35,6 +36,9 @@ public class TroopController {
 	public ResponseEntity<Troop> getGroup(@PathVariable int groupId){
 		
 		Troop troop = troopService.getTroop(groupId);
+		
+		if(troop == null)
+			throw new NotFoundException();
 		
 		return new ResponseEntity<Troop>(troop,HttpStatus.OK);		
 	}
