@@ -1,10 +1,15 @@
 package com.chit.chat;
 
 
+import java.sql.SQLException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 
 @SpringBootApplication
@@ -86,7 +91,16 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 	
-	 
+    @Bean(name = "dataSource")
+	public DriverManagerDataSource dataSource() throws SQLException {
+	    DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+	    driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+	    driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/vchat?useSSL=false");
+	    driverManagerDataSource.setUsername("hbstudent");
+	    driverManagerDataSource.setPassword("hbstudent");
+	    System.out.println(driverManagerDataSource.getConnection().isClosed());
+	    return driverManagerDataSource;
+	}
 	
-	
+  
 }

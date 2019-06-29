@@ -28,12 +28,14 @@ public class UsersEntity implements Serializable {
 		@Column(name="email")
 		private String email;
 		
-		@Column(name="user_name")
+		@Column(name="username")
 		private String username;
 		
 		@Column(name="password")
 		private String password;	
-
+		
+		@Column(name="enabled")
+		private boolean eanabled;
 
 		@Column(name="picture")
 		private byte[] picture;
@@ -99,10 +101,10 @@ public class UsersEntity implements Serializable {
 		}
 
 
-//		public String getPassword() {
-//			return password;
-//		}
-//
+		public String getPassword() {
+			return password;
+		}
+
 
 		public void setPassword(String password) {
 			this.password = password;

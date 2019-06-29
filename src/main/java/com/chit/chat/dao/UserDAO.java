@@ -12,5 +12,6 @@ import com.chit.chat.entity.UsersEntity;
 public interface UserDAO  extends CrudRepository<UsersEntity, Integer>{
 
 	
-	
+    UsersEntity findByUsername(String username);
+
 }
